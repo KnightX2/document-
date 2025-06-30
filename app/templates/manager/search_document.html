@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Search Document - Manager</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            background-color: #f4f6f9; 
+        }
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+        }
+        .card { 
+            background: white; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+        }
+        .card-header { 
+            background-color: #6f42c1; 
+            color: white; 
+            padding: 20px; 
+            border-radius: 8px 8px 0 0; 
+        }
+        .card-body { 
+            padding: 30px; 
+        }
+        .form-group { 
+            margin-bottom: 20px; 
+        }
+        label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: bold; 
+            color: #333; 
+        }
+        input, select { 
+            width: 100%; 
+            padding: 12px; 
+            border: 1px solid #ddd; 
+            border-radius: 5px; 
+            box-sizing: border-box; 
+            font-size: 14px; 
+        }
+        input:focus, select:focus { 
+            outline: none; 
+            border-color: #6f42c1; 
+            box-shadow: 0 0 5px rgba(111,66,193,0.3); 
+        }
+        .row { 
+            display: flex; 
+            gap: 20px; 
+            margin-bottom: 20px;
+        }
+        .col-md-6 { 
+            flex: 1; 
+        }
+        .col-md-4 {
+            flex: 0 0 calc(33.333% - 13.333px);
+        }
+        .col-md-3 {
+            flex: 0 0 calc(25% - 15px);
+        }
+        .btn { 
+            padding: 12px 24px; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-size: 14px; 
+            margin-right: 10px; 
+        }
+        .btn-primary { 
+            background-color: #6f42c1; 
+            color: white; 
+        }
+        .btn-secondary { 
+            background-color: #6c757d; 
+            color: white; 
+        }
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        .btn-info {
+            background-color: #17a2b8;
+            color: white;
+        }
+        .btn:hover { 
+            opacity: 0.9; 
+        }
+        .alert { 
+            padding: 15px; 
+            margin-bottom: 20px; 
+            border-radius: 5px; 
+        }
+        .alert-success { 
+            background-color: #d4edda; 
+            color: #155724; 
+            border: 1px solid #c3e6cb; 
+        }
+        .alert-error { 
+            background-color: #f8d7da; 
+            color: #721c24; 
+            border: 1px solid #f5c6cb; 
+        }
+        .header { 
+            margin-bottom: 20px; 
+        }
+        .header h1 { 
+            color: #333; 
+            margin: 0; 
+        }
+        .header p { 
+            color: #666; 
+            margin: 5px 0 0 0; 
+        }
+        .section-title {
+            background-color: #f8f9fa;
+            padding: 15px;
+            margin: 20px 0;
+            border-left: 4px solid #6f42c1;
+            font-weight: bold;
+            color: #333;
+        }
+        .nav-links {
+            margin-bottom: 20px;
+        }
+        .nav-links a {
+            color: #007bff;
+            text-decoration: none;
+            margin-right: 15px;
+        }
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .table th, .table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+        .table tr:hover {
+            background-color: #f5f5f5;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 11px;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status-visible {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .status-hidden {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .search-filters {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .search-filters h4 {
+            margin-top: 0;
+            color: #6f42c1;
+        }
+        .results-summary {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .results-summary strong {
+            color: #495057;
+        }
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        .no-results i {
+            font-size: 48px;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Document Archive System - Manager Panel</h1>
+            <p>Search Documents</p>
+        </div>
+        
+        <div class="nav-links">
+            <a href="{{ url_for('dashboard') }}">← Back to Dashboard</a>
+            <a href="{{ url_for('manager_add_document') }}">Add Document</a>
+            <a href="{{ url_for('manager_edit_document') }}">Edit Document</a>
+            <a href="{{ url_for('manager_delete_document') }}">Delete Document</a>
+            <a href="{{ url_for('manager_view_document') }}">View Document</a>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3 style="margin: 0;">Search Documents</h3>
+            </div>
+            
+            <div class="card-body">
+                <!-- Flash Messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ 'error' if category == 'error' else category }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                
+                <!-- Search Filters -->
+                <div class="section-title">Search Filters</div>
+                
+                <div class="search-filters">
+                    <h4>Advanced Search Options</h4>
+                    <form action="{{ url_for('manager_search_document') }}" method="GET">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="search_id">Document ID:</label>
+                                    <input type="text" id="search_id" name="search_id" placeholder="Enter Document ID" value="{{ request.args.get('search_id', '') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="search_title">Title:</label>
+                                    <input type="text" id="search_title" name="search_title" placeholder="Enter Document Title" value="{{ request.args.get('search_title', '') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="search_name">Document Name:</label>
+                                    <input type="text" id="search_name" name="search_name" placeholder="Enter Document Name" value="{{ request.args.get('search_name', '') }}">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="search_type">Document Type:</label>
+                                    <select id="search_type" name="search_type">
+                                        <option value="">All Types</option>
+                                        <option value="Outgoing" {{ 'selected' if request.args.get('search_type') == 'Outgoing' else '' }}>Outgoing</option>
+                                        <option value="Incoming" {{ 'selected' if request.args.get('search_type') == 'Incoming' else '' }}>Incoming</option>
+                                        <option value="Internal" {{ 'selected' if request.args.get('search_type') == 'Internal' else '' }}>Internal</option>
+                                        <option value="Memo" {{ 'selected' if request.args.get('search_type') == 'Memo' else '' }}>Memo</option>
+                                        <option value="Report" {{ 'selected' if request.args.get('search_type') == 'Report' else '' }}>Report</option>
+                                        <option value="Contract" {{ 'selected' if request.args.get('search_type') == 'Contract' else '' }}>Contract</option>
+                                        <option value="Invoice" {{ 'selected' if request.args.get('search_type') == 'Invoice' else '' }}>Invoice</option>
+                                        <option value="Other" {{ 'selected' if request.args.get('search_type') == 'Other' else '' }}>Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="search_entity">Entity Type:</label>
+                                    <select id="search_entity" name="search_entity">
+                                        <option value="">All Entities</option>
+                                        <option value="Government" {{ 'selected' if request.args.get('search_entity') == 'Government' else '' }}>Government</option>
+                                        <option value="Private" {{ 'selected' if request.args.get('search_entity') == 'Private' else '' }}>Private</option>
+                                        <option value="Civil" {{ 'selected' if request.args.get('search_entity') == 'Civil' else '' }}>Civil</option>
+                                        <option value="International" {{ 'selected' if request.args.get('search_entity') == 'International' else '' }}>International</option>
+                                        <option value="Local" {{ 'selected' if request.args.get('search_entity') == 'Local' else '' }}>Local</option>
+                                        <option value="Other" {{ 'selected' if request.args.get('search_entity') == 'Other' else '' }}>Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="search_section">Section:</label>
+                                    <select id="search_section" name="search_section">
+                                        <option value="">All Sections</option>
+                                        <option value="Human Resources" {{ 'selected' if request.args.get('search_section') == 'Human Resources' else '' }}>Human Resources</option>
+                                        <option value="Finance" {{ 'selected' if request.args.get('search_section') == 'Finance' else '' }}>Finance</option>
+                                        <option value="IT" {{ 'selected' if request.args.get('search_section') == 'IT' else '' }}>IT</option>
+                                        <option value="Management" {{ 'selected' if request.args.get('search_section') == 'Management' else '' }}>Management</option>
+                                        <option value="Sales" {{ 'selected' if request.args.get('search_section') == 'Sales' else '' }}>Sales</option>
+                                        <option value="Marketing" {{ 'selected' if request.args.get('search_section') == 'Marketing' else '' }}>Marketing</option>
+                                        <option value="Services" {{ 'selected' if request.args.get('search_section') == 'Services' else '' }}>Services</option>
+                                        <option value="Legal" {{ 'selected' if request.args.get('search_section') == 'Legal' else '' }}>Legal</option>
+                                        <option value="Operations" {{ 'selected' if request.args.get('search_section') == 'Operations' else '' }}>Operations</option>
+                                        <option value="Other" {{ 'selected' if request.args.get('search_section') == 'Other' else '' }}>Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="search_visibility">Visibility:</label>
+                                    <select id="search_visibility" name="search_visibility">
+                                        <option value="">All</option>
+                                        <option value="1" {{ 'selected' if request.args.get('search_visibility') == '1' else '' }}>Visible</option>
+                                        <option value="0" {{ 'selected' if request.args.get('search_visibility') == '0' else '' }}>Hidden</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="date_from">Date From:</label>
+                                    <input type="date" id="date_from" name="date_from" value="{{ request.args.get('date_from', '') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="date_to">Date To:</label>
+                                    <input type="date" id="date_to" name="date_to" value="{{ request.args.get('date_to', '') }}">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Search Documents</button>
+                        <a href="{{ url_for('manager_search_document') }}" class="btn btn-secondary">Clear Filters</a>
+                    </form>
+                </div>
+                
+                <!-- Search Results -->
+                {% if documents is defined %}
+                <div class="section-title">Search Results</div>
+                
+                {% if documents %}
+                <div class="results-summary">
+                    <strong>Found {{ documents|length }} document(s)</strong>
+                    {% if request.args %}
+                    <br><small>Showing results for your search criteria</small>
+                    {% endif %}
+                </div>
+                
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Document ID</th>
+                            <th>Title</th>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Date</th>
+                            <th>Section</th>
+                            <th>Visibility</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for doc in documents %}
+                        <tr>
+                            <td>{{ doc.DocumentID }}</td>
+                            <td>{{ doc.Title }}</td>
+                            <td>{{ doc.DocumentName }}</td>
+                            <td>{{ doc.DocumentType }}</td>
+                            <td>{{ doc.Date }}</td>
+                            <td>{{ doc.CurrentSection }}</td>
+                            <td>
+                                <span class="status-badge {{ 'status-visible' if doc.IsVisible else 'status-hidden' }}">
+                                    {{ 'Visible' if doc.IsVisible else 'Hidden' }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="{{ url_for('manager_view_document', search_id=doc.DocumentID) }}" class="btn btn-info btn-sm">View</a>
+                                    <a href="{{ url_for('manager_edit_document', id=doc.DocumentID) }}" class="btn btn-success btn-sm">Edit</a>
+                                    <a href="{{ url_for('manager_delete_document', search_id=doc.DocumentID) }}" class="btn btn-danger btn-sm">Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="no-results">
+                    <div>🔍</div>
+                    <h4>No documents found</h4>
+                    <p>Try adjusting your search criteria or browse all documents.</p>
+                    <a href="{{ url_for('manager_search_document') }}" class="btn btn-primary">View All Documents</a>
+                </div>
+                {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

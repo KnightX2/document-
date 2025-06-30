@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Create System Backup</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+        }
+        .card { 
+            background: white; 
+            border-radius: 15px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
+            overflow: hidden;
+        }
+        .card-header { 
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white; 
+            padding: 25px 30px; 
+            text-align: center;
+        }
+        .card-header h3 { 
+            margin: 0; 
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .card-body { 
+            padding: 40px; 
+        }
+        .form-group { 
+            margin-bottom: 25px; 
+        }
+        label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: 600; 
+            color: #333; 
+            font-size: 14px;
+        }
+        input, select, textarea { 
+            width: 100%; 
+            padding: 12px 15px; 
+            border: 2px solid #e9ecef; 
+            border-radius: 8px; 
+            box-sizing: border-box; 
+            font-size: 14px; 
+            transition: all 0.3s ease;
+        }
+        input:focus, select:focus, textarea:focus { 
+            outline: none; 
+            border-color: #28a745; 
+            box-shadow: 0 0 0 3px rgba(40,167,69,0.1); 
+        }
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        .row { 
+            display: flex; 
+            gap: 20px; 
+            margin-bottom: 25px;
+        }
+        .col-md-6 { 
+            flex: 1; 
+        }
+        .col-md-4 {
+            flex: 0 0 calc(33.333% - 13.333px);
+        }
+        .btn { 
+            padding: 12px 30px; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-size: 14px; 
+            font-weight: 600;
+            margin-right: 15px; 
+            transition: all 0.3s ease;
+        }
+        .btn-success { 
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white; 
+        }
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40,167,69,0.3);
+        }
+        .btn-secondary { 
+            background: #6c757d; 
+            color: white; 
+        }
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+        .alert { 
+            padding: 15px 20px; 
+            margin-bottom: 25px; 
+            border-radius: 8px; 
+            border-left: 4px solid;
+        }
+        .alert-success { 
+            background-color: #d4edda; 
+            color: #155724; 
+            border-color: #28a745;
+        }
+        .alert-error { 
+            background-color: #f8d7da; 
+            color: #721c24; 
+            border-color: #dc3545;
+        }
+        .header { 
+            margin-bottom: 30px; 
+            text-align: center;
+        }
+        .header h1 { 
+            color: white; 
+            margin: 0; 
+            font-size: 36px;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        .header p { 
+            color: rgba(255,255,255,0.9); 
+            margin: 10px 0 0 0; 
+            font-size: 18px;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding: 10px;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+        }
+        .checkbox-group:hover {
+            background-color: #f8f9fa;
+        }
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+            accent-color: #28a745;
+        }
+        .checkbox-group label {
+            margin: 0;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .section-title {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+            margin: 30px 0 20px 0;
+            border-radius: 10px;
+            border-left: 5px solid #28a745;
+            font-weight: 700;
+            color: #333;
+            font-size: 16px;
+        }
+        .backup-info {
+            background: linear-gradient(135deg, #e7f3ff 0%, #d1ecf1 100%);
+            border: 1px solid #bee5eb;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .backup-info h4 {
+            color: #0c5460;
+            margin-top: 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .backup-info ul {
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+        .backup-info li {
+            margin-bottom: 8px;
+            color: #0c5460;
+            line-height: 1.5;
+        }
+        .form-actions {
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        .progress-indicator {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #28a745;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Document Archive System</h1>
+            <p>Create System Backup</p>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3>Create System Backup</h3>
+            </div>
+            
+            <div class="card-body">
+                <!-- Flash Messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ 'error' if category == 'error' else category }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                
+                <!-- Backup Information -->
+                <div class="backup-info">
+                    <h4>📋 Backup Information</h4>
+                    <ul>
+                        <li><strong>Complete System Backup:</strong> Creates a comprehensive backup of all system data</li>
+                        <li><strong>Data Included:</strong> Users, Documents, Departments, Files, and System Settings</li>
+                        <li><strong>File Storage:</strong> Uploaded files are stored in a separate directory</li>
+                        <li><strong>Recovery:</strong> Data can be restored from backup at any time</li>
+                        <li><strong>Security:</strong> Backup files are encrypted and compressed for security</li>
+                    </ul>
+                </div>
+                
+                <form action="{{ url_for('create_backup') }}" method="POST" id="backupForm">
+                    <!-- Backup Settings -->
+                    <div class="section-title">⚙️ Backup Settings</div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="backup_name">Backup Name:</label>
+                                <input type="text" id="backup_name" name="backup_name" placeholder="e.g., full_backup_2024" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="backup_type">Backup Type:</label>
+                                <select id="backup_type" name="backup_type" required>
+                                    <option value="">Select Backup Type</option>
+                                    <option value="full">Full Backup</option>
+                                    <option value="incremental">Incremental Backup</option>
+                                    <option value="differential">Differential Backup</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="compression">Compression Level:</label>
+                                <select id="compression" name="compression" required>
+                                    <option value="">Select Compression Level</option>
+                                    <option value="none">No Compression</option>
+                                    <option value="low">Low Compression (Fast)</option>
+                                    <option value="medium">Medium Compression</option>
+                                    <option value="high">High Compression (Slow)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="encryption">Encryption Level:</label>
+                                <select id="encryption" name="encryption" required>
+                                    <option value="">Select Encryption Level</option>
+                                    <option value="none">No Encryption</option>
+                                    <option value="basic">Basic Encryption</option>
+                                    <option value="strong">Strong Encryption</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Data Selection -->
+                    <div class="section-title">📊 Data Selection</div>
+                    
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="backup_users" name="backup_users" value="1" checked>
+                            <label for="backup_users">User Accounts & Profiles</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="backup_documents" name="backup_documents" value="1" checked>
+                            <label for="backup_documents">Documents & Records</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="backup_departments" name="backup_departments" value="1" checked>
+                            <label for="backup_departments">Departments & Sections</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="backup_files" name="backup_files" value="1" checked>
+                            <label for="backup_files">Uploaded Files & Attachments</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="backup_settings" name="backup_settings" value="1" checked>
+                            <label for="backup_settings">System Settings & Configuration</label>
+                        </div>
+                    </div>
+                    
+                    <!-- Backup Schedule -->
+                    <div class="section-title">🕒 Backup Schedule</div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="schedule_type">Schedule Type:</label>
+                                <select id="schedule_type" name="schedule_type" required>
+                                    <option value="">Select Schedule Type</option>
+                                    <option value="once">One Time</option>
+                                    <option value="daily">Daily</option>
+                                    <option value="weekly">Weekly</option>
+                                    <option value="monthly">Monthly</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="backup_time">Backup Time:</label>
+                                <input type="time" id="backup_time" name="backup_time" value="02:00">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Retention Policy -->
+                    <div class="section-title">🗂️ Retention Policy</div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="retention_days">Retention Period (Days):</label>
+                                <input type="number" id="retention_days" name="retention_days" min="1" max="365" value="30">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="max_backups">Maximum Backups:</label>
+                                <input type="number" id="max_backups" name="max_backups" min="1" max="100" value="10">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Notes -->
+                    <div class="section-title">📝 Additional Notes</div>
+                    
+                    <div class="form-group">
+                        <label for="backup_notes">Backup Notes:</label>
+                        <textarea id="backup_notes" name="backup_notes" placeholder="Add any notes about this backup..."></textarea>
+                    </div>
+                    
+                    <!-- Progress Indicator -->
+                    <div class="progress-indicator" id="progressIndicator">
+                        <div class="spinner"></div>
+                        <p>Creating backup... Please wait</p>
+                    </div>
+                    
+                    <!-- Submit Buttons -->
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success" onclick="showProgress()">
+                            <i class="fas fa-download"></i> Create Backup
+                        </button>
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to Dashboard
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showProgress() {
+            document.getElementById('progressIndicator').style.display = 'block';
+            document.getElementById('backupForm').style.opacity = '0.7';
+        }
+    </script>
+</body>
+</html> 

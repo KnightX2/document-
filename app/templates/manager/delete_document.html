@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Delete Document - Manager</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            background-color: #f4f6f9; 
+        }
+        .container { 
+            max-width: 1000px; 
+            margin: 0 auto; 
+        }
+        .card { 
+            background: white; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+        }
+        .card-header { 
+            background-color: #dc3545; 
+            color: white; 
+            padding: 20px; 
+            border-radius: 8px 8px 0 0; 
+        }
+        .card-body { 
+            padding: 30px; 
+        }
+        .form-group { 
+            margin-bottom: 20px; 
+        }
+        label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: bold; 
+            color: #333; 
+        }
+        input, select { 
+            width: 100%; 
+            padding: 12px; 
+            border: 1px solid #ddd; 
+            border-radius: 5px; 
+            box-sizing: border-box; 
+            font-size: 14px; 
+        }
+        input:focus, select:focus { 
+            outline: none; 
+            border-color: #dc3545; 
+            box-shadow: 0 0 5px rgba(220,53,69,0.3); 
+        }
+        .row { 
+            display: flex; 
+            gap: 20px; 
+            margin-bottom: 20px;
+        }
+        .col-md-6 { 
+            flex: 1; 
+        }
+        .btn { 
+            padding: 12px 24px; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-size: 14px; 
+            margin-right: 10px; 
+        }
+        .btn-danger { 
+            background-color: #dc3545; 
+            color: white; 
+        }
+        .btn-secondary { 
+            background-color: #6c757d; 
+            color: white; 
+        }
+        .btn:hover { 
+            opacity: 0.9; 
+        }
+        .alert { 
+            padding: 15px; 
+            margin-bottom: 20px; 
+            border-radius: 5px; 
+        }
+        .alert-success { 
+            background-color: #d4edda; 
+            color: #155724; 
+            border: 1px solid #c3e6cb; 
+        }
+        .alert-error { 
+            background-color: #f8d7da; 
+            color: #721c24; 
+            border: 1px solid #f5c6cb; 
+        }
+        .header { 
+            margin-bottom: 20px; 
+        }
+        .header h1 { 
+            color: #333; 
+            margin: 0; 
+        }
+        .header p { 
+            color: #666; 
+            margin: 5px 0 0 0; 
+        }
+        .section-title {
+            background-color: #f8f9fa;
+            padding: 15px;
+            margin: 20px 0;
+            border-left: 4px solid #dc3545;
+            font-weight: bold;
+            color: #333;
+        }
+        .nav-links {
+            margin-bottom: 20px;
+        }
+        .nav-links a {
+            color: #007bff;
+            text-decoration: none;
+            margin-right: 15px;
+        }
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+        .document-info {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .document-info h4 {
+            color: #dc3545;
+            margin-top: 0;
+        }
+        .document-info p {
+            margin: 5px 0;
+            color: #495057;
+        }
+        .document-info strong {
+            color: #333;
+        }
+        .warning-box {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .warning-box h4 {
+            margin-top: 0;
+            color: #856404;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .table th, .table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+        .table tr:hover {
+            background-color: #f5f5f5;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Document Archive System - Manager Panel</h1>
+            <p>Delete Document</p>
+        </div>
+        
+        <div class="nav-links">
+            <a href="{{ url_for('dashboard') }}">← Back to Dashboard</a>
+            <a href="{{ url_for('manager_add_document') }}">Add Document</a>
+            <a href="{{ url_for('manager_edit_document') }}">Edit Document</a>
+            <a href="{{ url_for('manager_view_document') }}">View Document</a>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3 style="margin: 0;">Delete Document</h3>
+            </div>
+            
+            <div class="card-body">
+                <!-- Flash Messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ 'error' if category == 'error' else category }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                
+                <!-- Warning Box -->
+                <div class="warning-box">
+                    <h4>⚠️ Warning</h4>
+                    <p>Deleting a document is a permanent action and cannot be undone. Please make sure you want to delete the selected document before proceeding.</p>
+                </div>
+                
+                <!-- Search Section -->
+                <div class="section-title">Search Document to Delete</div>
+                
+                <form action="{{ url_for('manager_delete_document') }}" method="GET">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="search_id">Search by Document ID:</label>
+                                <input type="text" id="search_id" name="search_id" placeholder="Enter Document ID" value="{{ request.args.get('search_id', '') }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="search_title">Search by Title:</label>
+                                <input type="text" id="search_title" name="search_title" placeholder="Enter Document Title" value="{{ request.args.get('search_title', '') }}">
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Search</button>
+                </form>
+                
+                <!-- Document Information -->
+                {% if document %}
+                <div class="section-title">Document Information</div>
+                
+                <div class="document-info">
+                    <h4>Document Details</h4>
+                    <p><strong>Document ID:</strong> {{ document.DocumentID }}</p>
+                    <p><strong>Title:</strong> {{ document.Title }}</p>
+                    <p><strong>Document Name:</strong> {{ document.DocumentName }}</p>
+                    <p><strong>Document Type:</strong> {{ document.DocumentType }}</p>
+                    <p><strong>Date:</strong> {{ document.Date }}</p>
+                    <p><strong>Entity Type:</strong> {{ document.EntityType }}</p>
+                    <p><strong>Current Section:</strong> {{ document.CurrentSection }}</p>
+                    <p><strong>From Section:</strong> {{ document.FromSection or 'Not specified' }}</p>
+                    <p><strong>Description:</strong> {{ document.Description or 'No description' }}</p>
+                    <p><strong>File:</strong> {{ document.FilePath.split('/')[-1] if document.FilePath else 'No file uploaded' }}</p>
+                    <p><strong>Visibility:</strong> {{ 'Visible' if document.IsVisible else 'Hidden' }}</p>
+                </div>
+                
+                <!-- Delete Confirmation -->
+                <div class="section-title">Delete Confirmation</div>
+                
+                <form action="{{ url_for('manager_delete_document') }}" method="POST" onsubmit="return confirm('Are you absolutely sure you want to delete this document? This action cannot be undone.');">
+                    <input type="hidden" name="document_id" value="{{ document.DocumentID }}">
+                    <div class="form-group">
+                        <label for="confirm_delete">Type "DELETE" to confirm:</label>
+                        <input type="text" id="confirm_delete" name="confirm_delete" placeholder="Type DELETE to confirm" required>
+                    </div>
+                    <button type="submit" class="btn btn-danger">Delete Document</button>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Cancel</a>
+                </form>
+                {% endif %}
+                
+                <!-- Documents List -->
+                {% if documents %}
+                <div class="section-title">Available Documents</div>
+                
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Document ID</th>
+                            <th>Title</th>
+                            <th>Type</th>
+                            <th>Date</th>
+                            <th>Section</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for doc in documents %}
+                        <tr>
+                            <td>{{ doc.DocumentID }}</td>
+                            <td>{{ doc.Title }}</td>
+                            <td>{{ doc.DocumentType }}</td>
+                            <td>{{ doc.Date }}</td>
+                            <td>{{ doc.CurrentSection }}</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="{{ url_for('manager_delete_document', search_id=doc.DocumentID) }}" class="btn btn-danger btn-sm">Select for Deletion</a>
+                                    <a href="{{ url_for('manager_edit_document', id=doc.DocumentID) }}" class="btn btn-secondary btn-sm">Edit</a>
+                                    <a href="{{ url_for('manager_view_document', id=doc.DocumentID) }}" class="btn btn-secondary btn-sm">View</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="en">
+  <!--begin::Head-->
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>نظام الأرشيف | لوحة التحكم</title>
+    <!--begin::Primary Meta Tags-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="title" content="نظام الأرشيف | لوحة التحكم" />
+    <meta name="author" content="Archive System" />
+    <meta name="description" content="نظام إدارة الوثائق والأرشيف" />
+    <!--end::Primary Meta Tags-->
+    <!--begin::Fonts-->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
+      integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q="
+      crossorigin="anonymous"
+    />
+    <!--end::Fonts-->
+    <!--begin::Third Party Plugin(OverlayScrollbars)-->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css"
+      integrity="sha256-tZHrRjVqNSRyWg2wbppGnT833E/Ys0DHWGwT04GiqQg="
+      crossorigin="anonymous"
+    />
+    <!--end::Third Party Plugin(OverlayScrollbars)-->
+    <!--begin::Third Party Plugin(Bootstrap Icons)-->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI="
+      crossorigin="anonymous"
+    />
+    <!--end::Third Party Plugin(Bootstrap Icons)-->
+    <!--begin::Required Plugin(AdminLTE)-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='dist/css/adminlte.css') }}" />
+    <!--end::Required Plugin(AdminLTE)-->
+  </head>
+  <!--end::Head-->
+  <!--begin::Body-->
+  <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+    <!--begin::App Wrapper-->
+    <div class="app-wrapper">
+      <!--begin::Header-->
+      <nav class="app-header navbar navbar-expand bg-body">
+        <!--begin::Container-->
+        <div class="container-fluid">
+          <!--begin::Start Navbar Links-->
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
+                <i class="bi bi-list"></i>
+              </a>
+            </li>
+            <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">الرئيسية</a></li>
+            <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">اتصل بنا</a></li>
+          </ul>
+          <!--end::Start Navbar Links-->
+          <!--begin::End Navbar Links-->
+          <ul class="navbar-nav ms-auto">
+            <!--begin::User Menu Dropdown-->
+            <li class="nav-item dropdown user-menu">
+              <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                <img
+                  src="{{ url_for('static', filename='dist/assets/img/user2-160x160.jpg') }}"
+                  class="user-image rounded-circle shadow"
+                  alt="User Image"
+                />
+                <span class="d-none d-md-inline">{{ user_name }}</span>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+                <!--begin::User Image-->
+                <li class="user-header text-bg-primary">
+                  <img
+                    src="{{ url_for('static', filename='dist/assets/img/user2-160x160.jpg') }}"
+                    class="rounded-circle shadow"
+                    alt="User Image"
+                  />
+                  <p>
+                    {{ user_name }}
+                    <small>مرحباً بك في نظام الأرشيف</small>
+                  </p>
+                </li>
+                <!--end::User Image-->
+                <!--begin::Menu Footer-->
+                <li class="user-footer">
+                  <a href="{{ url_for('logout') }}" class="btn btn-default btn-flat float-end">تسجيل الخروج</a>
+                </li>
+                <!--end::Menu Footer-->
+              </ul>
+            </li>
+            <!--end::User Menu Dropdown-->
+          </ul>
+          <!--end::End Navbar Links-->
+        </div>
+        <!--end::Container-->
+      </nav>
+      <!--end::Header-->
+      <!--begin::Sidebar-->
+      <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+        <!--begin::Sidebar Brand-->
+        <div class="sidebar-brand">
+          <!--begin::Brand Link-->
+          <a href="{{ url_for('dashboard') }}" class="brand-link">
+            <!--begin::Brand Image-->
+            <img
+              src="{{ url_for('static', filename='dist/assets/img/AdminLTELogo.png') }}"
+              alt="Archive System Logo"
+              class="brand-image opacity-75 shadow"
+            />
+            <!--end::Brand Image-->
+            <!--begin::Brand Text-->
+            <span class="brand-text fw-light">نظام الأرشيف</span>
+            <!--end::Brand Text-->
+          </a>
+          <!--end::Brand Link-->
+        </div>
+        <!--end::Sidebar Brand-->
+        <!--begin::Sidebar Wrapper-->
+        <div class="sidebar-wrapper">
+          <nav class="mt-2">
+            <!--begin::Sidebar Menu-->
+            <ul
+              class="nav sidebar-menu flex-column"
+              data-lte-toggle="treeview"
+              role="menu"
+              data-accordion="false"
+            >
+              <li class="nav-item menu-open">
+                <a href="{{ url_for('dashboard') }}" class="nav-link active">
+                  <i class="nav-icon bi bi-speedometer"></i>
+                  <p>لوحة التحكم</p>
+                </a>
+              </li>
+              
+              {% if is_admin or is_manager or is_employee %}
+              <li class="nav-item">
+                <a href="{{ url_for('add_document') }}" class="nav-link">
+                  <i class="nav-icon bi bi-plus-circle"></i>
+                  <p>إضافة وثيقة</p>
+                </a>
+              </li>
+              {% endif %}
+              
+              {% if is_manager or is_employee %}
+              <li class="nav-item">
+                <a href="{{ url_for('manager_record_outgoing') }}" class="nav-link">
+                  <i class="nav-icon bi bi-arrow-up"></i>
+                  <p>تسجيل وثيقة صادرة</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url_for('manager_record_incoming') }}" class="nav-link">
+                  <i class="nav-icon bi bi-arrow-down"></i>
+                  <p>تسجيل وثيقة واردة</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url_for('manager_search_document') }}" class="nav-link">
+                  <i class="nav-icon bi bi-search"></i>
+                  <p>البحث عن وثيقة</p>
+                </a>
+              </li>
+              {% endif %}
+              
+              {% if is_manager %}
+              <li class="nav-item">
+                <a href="{{ url_for('manager_edit_document') }}" class="nav-link">
+                  <i class="nav-icon bi bi-pencil"></i>
+                  <p>تعديل وثيقة</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url_for('manager_delete_document') }}" class="nav-link">
+                  <i class="nav-icon bi bi-trash"></i>
+                  <p>حذف وثيقة</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url_for('manager_view_document') }}" class="nav-link">
+                  <i class="nav-icon bi bi-eye"></i>
+                  <p>عرض وثيقة</p>
+                </a>
+              </li>
+              {% endif %}
+              
+              {% if is_guest %}
+              <li class="nav-item">
+                <a href="{{ url_for('search_document') }}" class="nav-link">
+                  <i class="nav-icon bi bi-search"></i>
+                  <p>البحث عن وثيقة</p>
+                </a>
+              </li>
+              {% endif %}
+              
+              {% if is_admin %}
+              <li class="nav-item">
+                <a href="{{ url_for('manage_departments') }}" class="nav-link">
+                  <i class="nav-icon bi bi-gear"></i>
+                  <p>إدارة الأقسام</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url_for('create_backup') }}" class="nav-link">
+                  <i class="nav-icon bi bi-download"></i>
+                  <p>إنشاء نسخة احتياطية</p>
+                </a>
+              </li>
+              {% endif %}
+              
+              {% if is_admin %}
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="nav-icon bi bi-people"></i>
+                  <p>إدارة المستخدمين</p>
+                </a>
+              </li>
+              {% endif %}
+              
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="nav-icon bi bi-graph-up"></i>
+                  <p>التقارير</p>
+                </a>
+              </li>
+            </ul>
+            <!--end::Sidebar Menu-->
+          </nav>
+        </div>
+        <!--end::Sidebar Wrapper-->
+      </aside>
+      <!--end::Sidebar-->
+      <!--begin::App Main-->
+      <main class="app-main">
+        <!--begin::App Content Header-->
+        <div class="app-content-header">
+          <!--begin::Container-->
+          <div class="container-fluid">
+            <!--begin::Row-->
+            <div class="row">
+              <div class="col-sm-6"><h3 class="mb-0">لوحة التحكم</h3></div>
+              <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                  <li class="breadcrumb-item"><a href="#">الرئيسية</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">لوحة التحكم</li>
+                </ol>
+              </div>
+            </div>
+            <!--end::Row-->
+          </div>
+          <!--end::Container-->
+        </div>
+        <!--end::App Content Header-->
+        <!--begin::App Content-->
+        <div class="app-content">
+          <!--begin::Container-->
+          <div class="container-fluid">
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <!--begin::Row-->
+            <div class="row">
+              <!--begin::Col-->
+              <div class="col-lg-3 col-6">
+                <!--begin::Small Box Widget 1-->
+                <div class="small-box text-bg-primary">
+                  <div class="inner">
+                    <h3>150</h3>
+                    <p>إجمالي الوثائق</p>
+                  </div>
+                  <svg
+                    class="small-box-icon"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M2.25 2.25a.75.75 0 000 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 00-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 000-1.5H5.378A2.25 2.25 0 017.5 15h11.218a.75.75 0 00.674-.421 60.358 60.358 0 002.96-7.228.75.75 0 00-.525-.965A60.864 60.864 0 005.68 4.509l-.232-.867A1.875 1.875 0 003.636 2.25H2.25zM3.75 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM16.5 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z"
+                    ></path>
+                  </svg>
+                  <a
+                    href="#"
+                    class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover"
+                  >
+                    المزيد من المعلومات <i class="bi bi-link-45deg"></i>
+                  </a>
+                </div>
+                <!--end::Small Box Widget 1-->
+              </div>
+              <!--end::Col-->
+              <div class="col-lg-3 col-6">
+                <!--begin::Small Box Widget 2-->
+                <div class="small-box text-bg-success">
+                  <div class="inner">
+                    <h3>25</h3>
+                    <p>المستخدمين النشطين</p>
+                  </div>
+                  <svg
+                    class="small-box-icon"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M6.25 6.375a4.125 4.125 0 118.25 0 4.125 4.125 0 01-8.25 0zM3.25 19.125a7.125 7.125 0 0114.25 0v.003l-.001.119a.75.75 0 01-.363.63 13.067 13.067 0 01-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 01-.364-.63l-.001-.122zM19.75 7.5a.75.75 0 00-1.5 0v2.25H16a.75.75 0 000 1.5h2.25v2.25a.75.75 0 001.5 0v-2.25H22a.75.75 0 000-1.5h-2.25V7.5z"
+                    ></path>
+                  </svg>
+                  <a
+                    href="#"
+                    class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover"
+                  >
+                    المزيد من المعلومات <i class="bi bi-link-45deg"></i>
+                  </a>
+                </div>
+                <!--end::Small Box Widget 2-->
+              </div>
+              <!--end::Col-->
+              <div class="col-lg-3 col-6">
+                <!--begin::Small Box Widget 3-->
+                <div class="small-box text-bg-warning">
+                  <div class="inner">
+                    <h3>8</h3>
+                    <p>في انتظار المراجعة</p>
+                  </div>
+                  <svg
+                    class="small-box-icon"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                    ></path>
+                  </svg>
+                  <a
+                    href="#"
+                    class="small-box-footer link-dark link-underline-opacity-0 link-underline-opacity-50-hover"
+                  >
+                    المزيد من المعلومات <i class="bi bi-link-45deg"></i>
+                  </a>
+                </div>
+                <!--end::Small Box Widget 3-->
+              </div>
+              <!--end::Col-->
+              <div class="col-lg-3 col-6">
+                <!--begin::Small Box Widget 4-->
+                <div class="small-box text-bg-danger">
+                  <div class="inner">
+                    <h3>3</h3>
+                    <p>وثائق منتهية الصلاحية</p>
+                  </div>
+                  <svg
+                    class="small-box-icon"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      fill-rule="evenodd"
+                      d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                    ></path>
+                  </svg>
+                  <a
+                    href="#"
+                    class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover"
+                  >
+                    المزيد من المعلومات <i class="bi bi-link-45deg"></i>
+                  </a>
+                </div>
+                <!--end::Small Box Widget 4-->
+              </div>
+              <!--end::Col-->
+            </div>
+            <!--end::Row-->
+            
+            <!--begin::Row-->
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-header">
+                    <h3 class="card-title">مرحباً بك في نظام الأرشيف</h3>
+                  </div>
+                  <div class="card-body">
+                    <p>مرحباً <strong>{{ user_name }}</strong>! تم تسجيل دخولك بنجاح إلى نظام إدارة الوثائق والأرشيف.</p>
+                    
+                    {% if is_admin %}
+                    <div class="alert alert-info">
+                      <h5><i class="bi bi-info-circle"></i> صلاحيات المدير</h5>
+                      <p>لديك صلاحيات المدير، يمكنك:</p>
+                      <ul>
+                        <li>إضافة وثائق جديدة</li>
+                        <li>إدارة المستخدمين</li>
+                        <li>عرض جميع التقارير</li>
+                      </ul>
+                    </div>
+                    {% elif is_guest %}
+                    <div class="alert alert-warning">
+                      <h5><i class="bi bi-info-circle"></i> صلاحيات الزائر</h5>
+                      <p>كزائر، يمكنك:</p>
+                      <ul>
+                        <li>البحث عن الوثائق</li>
+                        <li>عرض تفاصيل الوثائق</li>
+                        <li>لا يمكنك إضافة أو تعديل الوثائق</li>
+                      </ul>
+                      <a href="{{ url_for('search_document') }}" class="btn btn-primary mt-2">
+                        <i class="bi bi-search"></i> البحث عن وثيقة
+                      </a>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-warning">
+                      <h5><i class="bi bi-exclamation-triangle"></i> صلاحيات المستخدم العادي</h5>
+                      <p>يمكنك:</p>
+                      <ul>
+                        <li>عرض الوثائق</li>
+                        <li>البحث في الأرشيف</li>
+                      </ul>
+                      <a href="{{ url_for('search_document') }}" class="btn btn-primary mt-2">
+                        <i class="bi bi-search"></i> البحث عن وثيقة
+                      </a>
+                    </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--end::Row-->
+          </div>
+          <!--end::Container-->
+        </div>
+        <!--end::App Content-->
+      </main>
+      <!--end::App Main-->
+      <!--begin::Footer-->
+      <footer class="app-footer">
+        <!--begin::To the end-->
+        <div class="float-end d-none d-sm-inline">نظام الأرشيف v2.0</div>
+        <!--end::To the end-->
+        <!--begin::Copyright-->
+        <strong>
+          جميع الحقوق محفوظة &copy; 2024
+        </strong>
+        <!--end::Copyright-->
+      </footer>
+      <!--end::Footer-->
+    </div>
+    <!--end::App Wrapper-->
+    <!--begin::Script-->
+    <!--begin::Third Party Plugin(OverlayScrollbars)-->
+    <script
+      src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
+      integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
+      crossorigin="anonymous"
+    ></script>
+    <!--end::Third Party Plugin(OverlayScrollbars)-->
+    <!--begin::Required Plugin(popperjs for Bootstrap 5)-->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
+    <!--end::Required Plugin(popperjs for Bootstrap 5)-->
+    <!--begin::Required Plugin(Bootstrap 5)-->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+      integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+      crossorigin="anonymous"
+    ></script>
+    <!--end::Required Plugin(Bootstrap 5)-->
+    <!--begin::Required Plugin(AdminLTE)-->
+    <script src="{{ url_for('static', filename='dist/js/adminlte.js') }}"></script>
+    <!--end::Required Plugin(AdminLTE)-->
+    <!--end::Script-->
+  </body>
+  <!--end::Body-->
+</html>
